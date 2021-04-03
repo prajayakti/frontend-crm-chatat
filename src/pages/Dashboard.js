@@ -11,6 +11,8 @@ import clsx from "clsx";
 import SubTitle from "../components/SubTitle";
 import { Divider } from "@material-ui/core";
 import AccessAlarmIcon from '@material-ui/icons/AccessAlarm';
+import CardMedia from '@material-ui/core/CardMedia';
+import welcome from '../assets/welcomeuser.png';
 
 
 const drawerWidth = 240;
@@ -20,6 +22,12 @@ const useStyles = makeStyles((theme) => ({
   },
   toolbar: {
     paddingRight: 24, // keep right padding when drawer closed
+  },
+  media: {
+    height: 600,
+    display: "flex",
+    alignItems: "center",
+  
   },
   toolbarIcon: {
     display: "flex",
@@ -214,12 +222,33 @@ const Dashboard = () => {
     }
     return true
   }
+  const hiddenMenu4 = ()=>{
+    if (localStorage.getItem("role_id") == 4) {
+      return false
+    }
+    return true
+  }
   return (
     <Wrapper>
-        <Title>Hai {loginName} selamat datang di Chatat Customer Success Management</Title>
+        <Title>Hai {loginName} selamat datang di Chatat Customer Success Management !</Title>
         <br/>
         <Divider/>
         <br/>
+        <div hidden={hiddenMenu4()}>
+          <div className="d-flex justify-content-between">
+            <div>
+        <img
+          
+          src={welcome}
+          title="Welcome user!!!"
+        />
+        </div>
+        <div className="mt-5">
+        <SubTitle>silahkan hubungi Ado atau Dimas untuk set up Job Function anda agar anda dapat membuka fitur sesuai job function anda </SubTitle>
+        </div>
+ 
+        </div>
+        </div>
         <div hidden={hiddenMenu2()}>
       <Grid container spacing={1}>
         <Grid item xs={4}>
