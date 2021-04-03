@@ -60,8 +60,20 @@ const MenuList = () => {
   const handleClick4 = () => {
     setOpen4(!open4);
   };
-  const hiddenMenu = ()=>{
+  const hiddenMenu3 = ()=>{
     if (localStorage.getItem("role_id") == 3) {
+      return false
+    }
+    return true
+  }
+  const hiddenMenu2 = ()=>{
+    if (localStorage.getItem("role_id") == 2) {
+      return false
+    }
+    return true
+  }
+  const hiddenMenu1 = ()=>{
+    if (localStorage.getItem("role_id") == 1) {
       return false
     }
     return true
@@ -69,12 +81,12 @@ const MenuList = () => {
 
   return (
     <div>
+      <div hidden={hiddenMenu2()}>
       <ListItem button>
         <ListItemIcon>
-          <Link href="/">
-            {" "}
+
             <DashboardIcon />
-          </Link>
+     
         </ListItemIcon>
         <Link href="/">
           {" "}
@@ -141,7 +153,19 @@ const MenuList = () => {
           </ListItem>
         </List>
       </Collapse>
-
+</div>
+<div hidden={hiddenMenu1()}>
+<ListItem button>
+        <ListItemIcon>
+      
+            <DashboardIcon />
+        
+        </ListItemIcon>
+        <Link href="/">
+          {" "}
+          <ListItemText primary="Dashboard" />
+        </Link>
+      </ListItem>
       <ListItem button onClick={handleClick4}>
         <ListItemIcon>
           <DevicesIcon />
@@ -185,7 +209,7 @@ const MenuList = () => {
         
       </Collapse>
       
-     
+     </div>
 
 
       <br />
@@ -196,7 +220,7 @@ const MenuList = () => {
 
 
 
-<div hidden={hiddenMenu()}>
+<div hidden={hiddenMenu3()}>
 
       <ListItem button onClick={handleClick2}>
         <ListItemIcon>

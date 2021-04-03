@@ -37,7 +37,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-
+import BackspaceIcon from "@material-ui/icons/Backspace";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
       height: theme.spacing(16),
     },
   },
- 
+
   modal: {
     display: "flex",
     alignItems: "center",
@@ -59,12 +59,20 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
     minWidth: 400,
   },
+  formControl2: {
+    margin: theme.spacing(1),
+    minWidth: 200,
+  },
+  formControl3: {
+    margin: theme.spacing(1),
+    minWidth: 50,
+  },
   paperModal: {
     backgroundColor: theme.palette.background.paper,
     border: "1px solid #1664F7",
     boxShadow: theme.shadows[3],
     padding: theme.spacing(2, 4, 3),
-    width: 600,
+    width: 500,
   },
   paper: {
     marginTop: theme.spacing(3),
@@ -162,6 +170,7 @@ const MerchantView = (props: any) => {
   const [redirect, setRedirect] = useState(false);
   const [marketingcyles, setMarketingCycles] = useState([]);
   const [page, setPage] = useState(1);
+  const [total, setTotal] = useState('');
   const [page2, setPage2] = useState(1);
   const loginId = Number(localStorage.getItem("id"));
   const loginName = localStorage.getItem("user_name");
@@ -318,6 +327,7 @@ const MerchantView = (props: any) => {
         `marketingcyclemerchant/${props.match.params.id}?page=${page}`
       );
       setMarketingCycles(data.data);
+      setTotal(data.meta.total);
     })();
   }, [page]);
   //ini bisa sih tapi last page nya masih ga jalan
@@ -456,16 +466,42 @@ const MerchantView = (props: any) => {
   // if (redirect) {
   //   return <Redirect to={`/merchants`} />;
   // }
+  const del = async (id) => {
+    if (window.confirm("Yakin mau dihapus Data ini?")) {
+      await axios.delete(`marketingcycle/${id}`);
+      setMarketingCycles(marketingcyles.filter((m) => m.id !== id));
+    }
+  };
+  // const del2 = async (id) => {
+  //   if (window.confirm("Yakin mau dihapus Data ini?")) {
+  //     await axios.delete(`jadwaldemo/${id}`);
+  //     setJadwalDemos(jadwaldemos.filter((m) => m.id !== id));
+  //   }
+  // };
 
   return (
     <Wrapper>
+      <div className=" container" align="center">
+        <ButtonGroup
+          variant="text"
+          color="primary"
+          aria-label="text primary button group"
+        >
+          <Button href={"/merchants1"}>Data Leads</Button>
+          <Button href={"/merchants2"}>Sign Up</Button>
+          <Button href={"/merchants3"}>Demo </Button>
+          <Button href={"/merchants4"}>Follow Up</Button>
+          <Button href={"/merchants5"}>Sign Up CURN</Button>
+          <Button href={"/merchants6"}>Subscribe</Button>
+        </ButtonGroup>
+      </div>
       <main className={classes.layout}>
         <Grid item xs={12}>
           <Paper className={classes.paper}>
             <Grid container spacing={1}>
               <Grid item xs={12} sm={6}>
                 <Typography variant="caption" color="textSecondary">
-                  Business Owner
+                  Business Owner 
                 </Typography>
                 <Typography variant="h4" component="h2">
                   {name}
@@ -493,21 +529,22 @@ const MerchantView = (props: any) => {
                   >
                     <Fade in={open1}>
                       <div className={classes.paperModal}>
+                        <br />
                         <Grid container spacing={1}>
                           <Grid item xs={12} sm={6}>
                             <Typography variant="caption" color="textSecondary">
-                              Email
+                              Business Owner
                             </Typography>
                             <Typography variant="subtitle2" component="h2">
-                              {email}
+                              {name}
                             </Typography>
                           </Grid>
                           <Grid item xs={12} sm={6}>
                             <Typography variant="caption" color="textSecondary">
-                              Phone
+                              Merchant Status Saat ini
                             </Typography>
                             <Typography variant="subtitle2" component="h2">
-                              {phone}
+                              {merchantstatus}
                             </Typography>
                           </Grid>
                         </Grid>
@@ -530,30 +567,37 @@ const MerchantView = (props: any) => {
                             id="staticEmail2"
                             value={merchant_id}
                           />
-
                           <div className="mb-3">
-                            <label>Merchant Flow Status</label>
-                            <select
-                              className="form-control"
-                              //  Value={phone_status_id}
-                              onChange={merchantStatusHandle}
+                            <FormControl
+                              required
+                              className={classes.formControl}
                             >
-                              <option selected value={merchant_status_id}>
-                                {merchantstatus}
-                              </option>
-                              {merchant_statuses.map((ms, index) => {
-                                return (
-                                  <option key={index} value={ms.id}>
-                                    {ms.name} {ms.id}
-                                  </option>
-                                );
-                              })}
-                            </select>
+                              <InputLabel id="demo-simple-select-required-label">
+                                Merchant Flow Status
+                              </InputLabel>
+                              <Select
+                                labelId="demo-simple-select-required-label"
+                                id="demo-simple-select-required"
+                                onChange={merchantStatusHandle}
+                              >
+                                <MenuItem value="">
+                                  <em>None</em>
+                                </MenuItem>
+                                {merchant_statuses.map((ms, index) => {
+                                  return (
+                                    <MenuItem key={index} value={ms.id}>
+                                      {ms.name}
+                                    </MenuItem>
+                                  );
+                                })}
+                              </Select>
+                              <FormHelperText>Required</FormHelperText>
+                            </FormControl>
                           </div>
 
-                          <button className="btn btn-outline-secondary">
-                            Submit
-                          </button>
+                          <div align="right">
+                            <button className="btn btn-primary">Submit</button>
+                          </div>
                         </form>
                       </div>
                     </Fade>
@@ -574,18 +618,19 @@ const MerchantView = (props: any) => {
                   >
                     <Fade in={open}>
                       <div className={classes.paperModal}>
+                        <br />
                         <Grid container spacing={1}>
                           <Grid item xs={12} sm={6}>
                             <Typography variant="caption" color="textSecondary">
-                              Email
+                              Business Owner
                             </Typography>
                             <Typography variant="subtitle2" component="h2">
-                              {email}
+                              {name}
                             </Typography>
                           </Grid>
                           <Grid item xs={12} sm={6}>
                             <Typography variant="caption" color="textSecondary">
-                              Phone
+                              Phone / WhatsApp
                             </Typography>
                             <Typography variant="subtitle2" component="h2">
                               {phone}
@@ -611,73 +656,97 @@ const MerchantView = (props: any) => {
                             id="staticEmail2"
                             value={merchant_id}
                           />
+                          <div className="mb-3">
+                            <FormControl
+                              required
+                              className={classes.formControl}
+                            >
+                              <InputLabel id="demo-simple-select-required-label">
+                                Phone Status
+                              </InputLabel>
+                              <Select
+                                labelId="demo-simple-select-required-label"
+                                id="demo-simple-select-required"
+                                onChange={phoneStatusHandle}
+                              >
+                                <MenuItem value="">
+                                  <em>None</em>
+                                </MenuItem>
+                                {phone_statuses.map((ps, index) => {
+                                  return (
+                                    <MenuItem key={index} value={ps.id}>
+                                      {ps.name}
+                                    </MenuItem>
+                                  );
+                                })}
+                              </Select>
+                              <FormHelperText>Required</FormHelperText>
+                            </FormControl>
 
-                          <div className="mb-3">
-                            <label>Phone Status</label>
-                            <select
-                              className="form-control"
-                              onChange={phoneStatusHandle}
+                            <FormControl
+                              required
+                              className={classes.formControl}
                             >
-                              <option selected value="">
-                                Select Phone Status...
-                              </option>
-                              {phone_statuses.map((ps, index) => {
-                                return (
-                                  <option key={index} value={ps.id}>
-                                    {ps.name} {ps.id}
-                                  </option>
-                                );
-                              })}
-                            </select>
-                          </div>
-                          <div className="mb-3">
-                            <label>Wa Status</label>
-                            <select
-                              className="form-control"
-                              //  Value={phone_status_id}
-                              onChange={waStatusHandle}
+                              <InputLabel id="demo-simple-select-required-label">
+                                WhatsApp Status
+                              </InputLabel>
+                              <Select
+                                labelId="demo-simple-select-required-label"
+                                id="demo-simple-select-required"
+                                onChange={waStatusHandle}
+                              >
+                                <MenuItem value="">
+                                  <em>None</em>
+                                </MenuItem>
+                                {wa_statuses.map((ws, index) => {
+                                  return (
+                                    <MenuItem key={index} value={ws.id}>
+                                      {ws.name}
+                                    </MenuItem>
+                                  );
+                                })}
+                              </Select>
+                              <FormHelperText>Required</FormHelperText>
+                            </FormControl>
+                            <FormControl
+                              required
+                              className={classes.formControl}
                             >
-                              <option selected>Select Wa Status...</option>
-                              {wa_statuses.map((ws, index) => {
-                                return (
-                                  <option key={index} value={ws.id}>
-                                    {ws.name} {ws.id}
-                                  </option>
-                                );
-                              })}
-                            </select>
-                          </div>
-                          <div className="mb-3">
-                            <label>Call Result</label>
-                            <select
-                              className="form-control"
-                              //  Value={phone_status_id}
-                              onChange={resultHandle}
-                            >
-                              <option selected value="">
-                                Select Result ...
-                              </option>
-                              {results.map((rs, index) => {
-                                return (
-                                  <option key={index} value={rs.id}>
-                                    {rs.name} {rs.id}
-                                  </option>
-                                );
-                              })}
-                            </select>
-                          </div>
-                          <div className="mb-3">
-                            <label>Note</label>
-                            <input
-                              type="text"
-                              className="form-control"
-                              placeholder="input note..."
+                              <InputLabel id="demo-simple-select-required-label">
+                                Sales Result
+                              </InputLabel>
+                              <Select
+                                labelId="demo-simple-select-required-label"
+                                id="demo-simple-select-required"
+                                onChange={resultHandle}
+                              >
+                                <MenuItem value="">
+                                  <em>None</em>
+                                </MenuItem>
+                                {results.map((rs, index) => {
+                                  return (
+                                    <MenuItem key={index} value={rs.id}>
+                                      {rs.name}
+                                    </MenuItem>
+                                  );
+                                })}
+                              </Select>
+                              <FormHelperText>Required</FormHelperText>
+                            </FormControl>
+
+                            <TextField
+                              className={classes.formControl}
+                              id="standard-basic"
+                              label="Note atau Catatan Khusus"
                               onChange={(e) => setNote(e.target.value)}
                             />
                           </div>
-                          <button className="btn btn-outline-secondary">
-                            Submit
-                          </button>
+                          <Divider />
+                          <br />
+
+                          <div align="right">
+                            <button className="btn btn-primary">Submit</button>
+                          </div>
                         </form>
                       </div>
                     </Fade>
@@ -698,13 +767,14 @@ const MerchantView = (props: any) => {
                   >
                     <Fade in={open4}>
                       <div className={classes.paperModal}>
+                        <br />
                         <Grid container spacing={1}>
                           <Grid item xs={12} sm={6}>
                             <Typography variant="caption" color="textSecondary">
-                              Email
+                              Name
                             </Typography>
                             <Typography variant="subtitle2" component="h2">
-                              {email}
+                              {name}
                             </Typography>
                           </Grid>
                           <Grid item xs={12} sm={6}>
@@ -735,7 +805,7 @@ const MerchantView = (props: any) => {
                             id="staticEmail2"
                             value={merchant_id}
                           />
-                          
+
                           <div className="mb-3">
                             <label>Demo Date Time</label>
                             <DateTimePickerComponent
@@ -764,7 +834,7 @@ const MerchantView = (props: any) => {
                                 {demo_medias.map((dm, index) => {
                                   return (
                                     <MenuItem key={index} value={dm.id}>
-                                      {dm.name} 
+                                      {dm.name}
                                     </MenuItem>
                                   );
                                 })}
@@ -772,11 +842,11 @@ const MerchantView = (props: any) => {
                               <FormHelperText>Required</FormHelperText>
                             </FormControl>
                           </div>
-
-
-                          <button className="btn btn-outline-secondary">
-                            Submit
-                          </button>
+                          <Divider />
+                          <br />
+                          <div align="right">
+                            <button className="btn btn-primary">Submit</button>
+                          </div>
                         </form>
                       </div>
                     </Fade>
@@ -797,18 +867,19 @@ const MerchantView = (props: any) => {
                   >
                     <Fade in={open3}>
                       <div className={classes.paperModal}>
+                        <br />
                         <Grid container spacing={1}>
                           <Grid item xs={12} sm={6}>
                             <Typography variant="caption" color="textSecondary">
-                              Email
+                              Business Owner
                             </Typography>
                             <Typography variant="subtitle2" component="h2">
-                              {email}
+                              {name}
                             </Typography>
                           </Grid>
                           <Grid item xs={12} sm={6}>
                             <Typography variant="caption" color="textSecondary">
-                              Phone
+                              Phone / WhatsApp
                             </Typography>
                             <Typography variant="subtitle2" component="h2">
                               {phone}
@@ -835,101 +906,152 @@ const MerchantView = (props: any) => {
                             value={merchant_id}
                           />
 
-                          <div className="mb-3">
-                            <label>Umur</label>
-                            <input
-                              className="form-control"
-                              defaultValue={age}
-                              onChange={(e) => setAge(e.target.value)}
-                            />
-                          </div>
-                          <div className="mb-3">
-                            <label>Gender</label>
-                            <select
-                              className="form-control"
-                              value={gender_id}
-                              onChange={genderHandle}
-                              required
-                            >
-                              {genders.map((gs, index) => {
-                                return (
-                                  <option key={index} value={gs.id}>
-                                    {gs.name}
-                                  </option>
-                                );
-                              })}
-                            </select>
-                          </div>
-                          <div className="mb-3">
-                            <label>Lama Usaha</label>
-                            <input
-                              className="form-control"
-                              defaultValue={lama}
-                              onChange={(e) => setLama(e.target.value)}
-                            />
-                          </div>
-                          <div className="mb-3">
-                            <label>Location</label>
-                            <input
-                              className="form-control"
-                              defaultValue={location}
-                              onChange={(e) => setLocation(e.target.value)}
-                            />
-                          </div>
+                          <Grid container spacing={1}>
+                            <Grid item xs={6} sm={6}>
+                              <TextField
+                                className={classes.formControl2}
+                                defaultValue={age}
+                                type="number"
+                                id="standard-basic"
+                                label="Umur"
+                                onChange={(e) => setAge(e.target.value)}
+                              />
+                            </Grid>
+                            <Grid item xs={6} sm={6}>
+                              <FormControl
+                                required
+                                className={classes.formControl2}
+                              >
+                                <InputLabel id="demo-simple-select-required-label">
+                                  Jenis Kelamin
+                                </InputLabel>
+                                <Select
+                                  labelId="demo-simple-select-required-label"
+                                  id="demo-simple-select-required-label"
+                                  onChange={genderHandle}
+                                  className={classes.selectEmpty}
+                                >
+                                  <MenuItem value="">
+                                    <em>None</em>
+                                  </MenuItem>
+                                  {genders.map((gs, index) => {
+                                    return (
+                                      <MenuItem key={index} value={gs.id}>
+                                        {gs.name}
+                                      </MenuItem>
+                                    );
+                                  })}
+                                </Select>
+                                <FormHelperText>Required</FormHelperText>
+                              </FormControl>
+                            </Grid>
+                          </Grid>
 
-                          <div className="mb-3">
-                            <label>Omset Usaha</label>
-                            <input
-                              className="form-control"
-                              defaultValue={omset}
-                              onChange={(e) => setOmset(e.target.value)}
-                            />
-                          </div>
-                          <div className="mb-3">
-                            <label>Detail Usaha</label>
-                            <input
-                              className="form-control"
-                              defaultValue={detail}
-                              onChange={(e) => setDetail(e.target.value)}
-                            />
-                          </div>
-                          <div className="mb-3">
-                            <label>Source Data</label>
-                            <select
-                              className="form-control"
-                              value={source_id}
-                              onChange={sourceHandle}
-                            >
-                              {sources.map((so, index) => {
-                                return (
-                                  <option key={index} value={so.id}>
-                                    {so.name}
-                                  </option>
-                                );
-                              })}
-                            </select>
-                          </div>
-                          <div className="mb-3">
-                            <label>Jenis Usaha</label>
-                            <select
-                              className="form-control"
-                              value={jenis_usaha_id}
-                              onChange={jenisUsahaHandle}
-                              required
-                            >
-                              {jenis_usahas.map((j, index) => {
-                                return (
-                                  <option key={index} value={j.id}>
-                                    {j.name}
-                                  </option>
-                                );
-                              })}
-                            </select>
-                          </div>
+                          <Grid container spacing={1}>
+                            <Grid item xs={6} sm={6}>
+                              <TextField
+                                className={classes.formControl2}
+                                defaultValue={lama}
+                                type="number"
+                                id="standard-basic"
+                                label="Lama Usaha (bulan)"
+                                onChange={(e) => setLama(e.target.value)}
+                              />
+                            </Grid>
+                            <Grid item xs={6} sm={6}>
+                              <TextField
+                                className={classes.formControl2}
+                                defaultValue={location}
+                                id="standard-basic"
+                                label="Lokasi"
+                                onChange={(e) => setLocation(e.target.value)}
+                              />
+                            </Grid>
+                          </Grid>
+                          <Grid container spacing={1}>
+                            <Grid item xs={6} sm={6}>
+                              <TextField
+                                className={classes.formControl2}
+                                defaultValue={omset}
+                                id="standard-basic"
+                                label="Omset Per Bulan (Juta)"
+                                onChange={(e) => setOmset(e.target.value)}
+                              />
+                            </Grid>
+                            <Grid item xs={6} sm={6}>
+                              <TextField
+                                className={classes.formControl2}
+                                defaultValue={detail}
+                                id="standard-basic"
+                                label="Detail Usaha"
+                                onChange={(e) => setDetail(e.target.value)}
+                              />
+                            </Grid>
+                          </Grid>
+                          <Grid container spacing={1}>
+                            <Grid item xs={6} sm={6}>
+                              <FormControl
+                                required
+                                className={classes.formControl2}
+                              >
+                                <InputLabel id="demo-simple-select-required-label">
+                                  Data Source
+                                </InputLabel>
+                                <Select
+                                  labelId="demo-simple-select-required-label"
+                                  id="demo-simple-select-required-label"
+                                  className={classes.selectEmpty}
+                                  onChange={sourceHandle}
+                                >
+                                  <MenuItem value="">
+                                    <em>None</em>
+                                  </MenuItem>
+                                  {sources.map((sc, index) => {
+                                    return (
+                                      <MenuItem key={index} value={sc.id}>
+                                        {sc.name}
+                                      </MenuItem>
+                                    );
+                                  })}
+                                </Select>
+                                <FormHelperText>Required</FormHelperText>
+                              </FormControl>
+                            </Grid>
+                            <Grid item xs={6} sm={6}>
+                              <FormControl
+                                required
+                                className={classes.formControl2}
+                              >
+                                <InputLabel id="demo-simple-select-required-label">
+                                  Jenis Usaha
+                                </InputLabel>
+                                <Select
+                                  labelId="demo-simple-select-required-label"
+                                  id="demo-simple-select-required-label"
+                                  className={classes.selectEmpty}
+                                  onChange={jenisUsahaHandle}
+                                >
+                                  <MenuItem value="">
+                                    <em>None</em>
+                                  </MenuItem>
+                                  {jenis_usahas.map((ju, index) => {
+                                    return (
+                                      <MenuItem key={index} value={ju.id}>
+                                        {ju.name}
+                                      </MenuItem>
+                                    );
+                                  })}
+                                </Select>
+                                <FormHelperText>Required</FormHelperText>
+                              </FormControl>
+                            </Grid>
+                          </Grid>
 
-                          <button className="btn btn-outline-secondary">
-                            Submit
-                          </button>
+                          <Divider />
+                          <br />
+                          <div align="right">
+                            <button className="btn btn-primary">Submit</button>
+                          </div>
                         </form>
                       </div>
                     </Fade>
@@ -1152,8 +1274,12 @@ const MerchantView = (props: any) => {
               Business Owner: {name}
             </Typography>
             <Typography variant="h6" component="h2">
-              Marketing Cycle
+              Marketing Cycle 
             </Typography>
+            <Typography variant="caption" color="textSecondary">
+              Total Data: {total}
+            </Typography>
+            <br />
             <br />
             <TableContainer component={Paper}>
               <Table className={classes.table} aria-label="simple table">
@@ -1164,6 +1290,7 @@ const MerchantView = (props: any) => {
                     <TableCell>WA</TableCell>
                     <TableCell>Result</TableCell>
                     <TableCell>Note</TableCell>
+                    <TableCell align="center">Action</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -1177,6 +1304,11 @@ const MerchantView = (props: any) => {
                       <TableCell>{marketingcyle.wastatus.name}</TableCell>
                       <TableCell>{marketingcyle.result.name}</TableCell>
                       <TableCell>{marketingcyle.note}</TableCell>
+                      <TableCell>
+                        <Button onClick={() => del(marketingcyle.id)}>
+                          <BackspaceIcon />
+                        </Button>
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -1205,7 +1337,7 @@ const MerchantView = (props: any) => {
               Business Owner: {name}
             </Typography>
             <Typography variant="h6" component="h2">
-              Demo History
+              Demo Schedule
             </Typography>
             <br />
             <TableContainer component={Paper}>
@@ -1217,6 +1349,7 @@ const MerchantView = (props: any) => {
                     <TableCell>CXO</TableCell>
                     <TableCell>Demo Status</TableCell>
                     <TableCell>Note</TableCell>
+                    {/* <TableCell align="center">Action</TableCell> */}
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -1229,6 +1362,11 @@ const MerchantView = (props: any) => {
                       <TableCell>{jadwaldemo.user2.name}</TableCell>
                       <TableCell>{jadwaldemo.demoresult.name}</TableCell>
                       <TableCell>{jadwaldemo.note}</TableCell>
+                      {/* <TableCell>
+                        <Button onClick={() => del(jadwaldemo.id)}>
+                          <BackspaceIcon />
+                        </Button>
+                        </TableCell> */}
                     </TableRow>
                   ))}
                 </TableBody>

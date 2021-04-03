@@ -32,6 +32,12 @@ import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import { OutlinedInput } from "@material-ui/core";
 import { DateTimePickerComponent } from '@syncfusion/ej2-react-calendars';
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import BackspaceIcon from "@material-ui/icons/Backspace";
 
 
 
@@ -82,7 +88,14 @@ const useStyles = makeStyles((theme) => ({
   table: {
     minWidth: 650,
   },
-
+  formControl2: {
+    margin: theme.spacing(1),
+    minWidth: 200,
+  },
+  formControl3: {
+    margin: theme.spacing(1),
+    minWidth: 50,
+  },
   stepper: {
     padding: theme.spacing(3, 0, 5),
   },
@@ -322,7 +335,7 @@ const prev2 = () => {
     // e.preventDefault();
     await axios.put(`merchant/${props.match.params.id}`, {
 
-      lama,
+      lama, 
       location,
       age,
       omset,
@@ -337,11 +350,31 @@ const prev2 = () => {
   // if (redirect) {
   //   return <Redirect to={`/demo1`} />;
   // }
-
+  const hiddenMenu3 = ()=>{
+    if (localStorage.getItem("role_id") == 3) {
+      return false
+    }
+    return true
+  }
 
   
   return (
     <Wrapper>
+      <div className="container" align="center">
+            <ButtonGroup
+              variant="text"
+              color="primary"
+              aria-label="text primary button group"
+            >
+              <Button href={"/demo1"}>Jadwal Demo</Button>
+              <Button href={"/demo2"}>Sudah Demo</Button>
+              <Button href={"/demo3"}>Ghosting </Button>
+              <Button href={"/demo4"}>Reschedule</Button>
+
+            </ButtonGroup>
+          </div>
+          <br/>
+          <Divider/>
       <main className={classes.layout}>
         <Grid item xs={12}>
           <Paper className={classes.paper}>
@@ -361,7 +394,8 @@ const prev2 = () => {
                   aria-label="contained primary button group"
                 >
 {/* UPDATE DATA FROM                  */}
-                  <Button onClick={handleOpen3}>Update Data</Button>
+
+<Button onClick={handleOpen3}>Update Data</Button>
                   <Modal
                     aria-labelledby="transition-modal-title"
                     aria-describedby="transition-modal-description"
@@ -376,18 +410,19 @@ const prev2 = () => {
                   >
                     <Fade in={open3}>
                       <div className={classes.paperModal}>
+                        <br />
                         <Grid container spacing={1}>
                           <Grid item xs={12} sm={6}>
                             <Typography variant="caption" color="textSecondary">
-                              Email
+                              Business Owner
                             </Typography>
                             <Typography variant="subtitle2" component="h2">
-                              {email}
+                              {name}
                             </Typography>
                           </Grid>
                           <Grid item xs={12} sm={6}>
                             <Typography variant="caption" color="textSecondary">
-                              Phone
+                              Phone / WhatsApp
                             </Typography>
                             <Typography variant="subtitle2" component="h2">
                               {phone}
@@ -414,103 +449,168 @@ const prev2 = () => {
                             value={merchant_id}
                           />
 
-                          <div className="mb-3">
-                            <label>Umur</label>
-                            <input
-                              className="form-control"
-                              defaultValue={age}
-                              onChange={(e) => setAge(e.target.value)}
-                            />
-                          </div>
-                          <div className="mb-3">
-                            <label>Gender</label>
-                            <select
-                              className="form-control"
-                             value={gender_id}
-                              onChange={genderHandle}
-                            >
-                              {genders.map((gs, index) => {
-                                return (
-                                  <option key={index} value={gs.id}>
-                                    {gs.name}
-                                  </option>
-                                );
-                              })}
-                            </select>
-                          </div>
-                          <div className="mb-3">
-                            <label>Lama Usaha</label>
-                            <input
-                              className="form-control"
-                              defaultValue={lama}
-                              onChange={(e) => setLama(e.target.value)}
-                            />
-                          </div>
-                          <div className="mb-3">
-                            <label>Location</label>
-                            <input
-                              className="form-control"
-                              defaultValue={location}
-                              onChange={(e) => setLocation(e.target.value)}
-                            />
-                          </div>
+                          <Grid container spacing={1}>
+                            <Grid item xs={6} sm={6}>
+                              <TextField
+                                className={classes.formControl2}
+                                defaultValue={age}
+                                type="number"
+                                id="standard-basic"
+                                label="Umur"
+                                onChange={(e) => setAge(e.target.value)}
+                              />
+                            </Grid>
+                            <Grid item xs={6} sm={6}>
+                              <FormControl
+                                required
+                                className={classes.formControl2}
+                              >
+                                <InputLabel id="demo-simple-select-required-label">
+                                  Jenis Kelamin
+                                </InputLabel>
+                                <Select
+                                  labelId="demo-simple-select-required-label"
+                                  id="demo-simple-select-required-label"
+                                  onChange={genderHandle}
+                                  className={classes.selectEmpty}
+                                >
+                                  <MenuItem value="">
+                                    <em>None</em>
+                                  </MenuItem>
+                                  {genders.map((gs, index) => {
+                                    return (
+                                      <MenuItem key={index} value={gs.id}>
+                                        {gs.name}
+                                      </MenuItem>
+                                    );
+                                  })}
+                                </Select>
+                                <FormHelperText>Required</FormHelperText>
+                              </FormControl>
+                            </Grid>
+                          </Grid>
 
-                          <div className="mb-3">
-                            <label>Omset Usaha</label>
-                            <input
-                              className="form-control"
-                              defaultValue={omset}
-                              onChange={(e) => setOmset(e.target.value)}
-                            />
-                          </div>
-                          <div className="mb-3">
-                            <label>Detail Usaha</label>
-                            <input
-                              className="form-control"
-                              defaultValue={detail}
-                              onChange={(e) => setDetail(e.target.value)}
-                            />
-                          </div>
-                          <div className="mb-3">
-                            <label>Source Data</label>
-                            <select
-                              className="form-control"
-                              value={source_id}
-                              onChange={sourceHandle}
-                            >
-                              {sources.map((so, index) => {
-                                return (
-                                  <option key={index} value={so.id}>
-                                    {so.name}
-                                  </option>
-                                );
-                              })}
-                            </select>
-                          </div>
-                          <div className="mb-3">
-                            <label>Jenis Usaha</label>
-                            <select
-                              className="form-control"
-                              value={jenis_usaha_id}
-                              onChange={jenisUsahaHandle}
-                            >
-                              {jenis_usahas.map((j, index) => {
-                                return (
-                                  <option key={index} value={j.id}>
-                                    {j.name}
-                                  </option>
-                                );
-                              })}
-                            </select>
-                          </div>
+                          <Grid container spacing={1}>
+                            <Grid item xs={6} sm={6}>
+                              <TextField
+                                className={classes.formControl2}
+                                defaultValue={lama}
+                                type="number"
+                                id="standard-basic"
+                                label="Lama Usaha (bulan)"
+                                onChange={(e) => setLama(e.target.value)}
+                              />
+                            </Grid>
+                            <Grid item xs={6} sm={6}>
+                              <TextField
+                                className={classes.formControl2}
+                                defaultValue={location}
+                                id="standard-basic"
+                                label="Lokasi"
+                                onChange={(e) => setLocation(e.target.value)}
+                              />
+                            </Grid>
+                          </Grid>
+                          <Grid container spacing={1}>
+                            <Grid item xs={6} sm={6}>
+                              <TextField
+                                className={classes.formControl2}
+                                defaultValue={omset}
+                                id="standard-basic"
+                                label="Omset Per Bulan (Juta)"
+                                onChange={(e) => setOmset(e.target.value)}
+                              />
+                            </Grid>
+                            <Grid item xs={6} sm={6}>
+                              <TextField
+                                className={classes.formControl2}
+                                defaultValue={detail}
+                                id="standard-basic"
+                                label="Detail Usaha"
+                                onChange={(e) => setDetail(e.target.value)}
+                              />
+                            </Grid>
+                          </Grid>
+                          <Grid container spacing={1}>
+                            <Grid item xs={6} sm={6}>
+                              <FormControl
+                                required
+                                className={classes.formControl2}
+                              >
+                                <InputLabel id="demo-simple-select-required-label">
+                                  Data Source
+                                </InputLabel>
+                                <Select
+                                  labelId="demo-simple-select-required-label"
+                                  id="demo-simple-select-required-label"
+                                  className={classes.selectEmpty}
+                                  onChange={sourceHandle}
+                                >
+                                  <MenuItem value="">
+                                    <em>None</em>
+                                  </MenuItem>
+                                  {sources.map((sc, index) => {
+                                    return (
+                                      <MenuItem key={index} value={sc.id}>
+                                        {sc.name}
+                                      </MenuItem>
+                                    );
+                                  })}
+                                </Select>
+                                <FormHelperText>Required</FormHelperText>
+                              </FormControl>
+                            </Grid>
+                            <Grid item xs={6} sm={6}>
+                              <FormControl
+                                required
+                                className={classes.formControl2}
+                              >
+                                <InputLabel id="demo-simple-select-required-label">
+                                  Jenis Usaha
+                                </InputLabel>
+                                <Select
+                                  labelId="demo-simple-select-required-label"
+                                  id="demo-simple-select-required-label"
+                                  className={classes.selectEmpty}
+                                  onChange={jenisUsahaHandle}
+                                >
+                                  <MenuItem value="">
+                                    <em>None</em>
+                                  </MenuItem>
+                                  {jenis_usahas.map((ju, index) => {
+                                    return (
+                                      <MenuItem key={index} value={ju.id}>
+                                        {ju.name}
+                                      </MenuItem>
+                                    );
+                                  })}
+                                </Select>
+                                <FormHelperText>Required</FormHelperText>
+                              </FormControl>
+                            </Grid>
+                          </Grid>
 
-                          <button className="btn btn-outline-secondary">
-                            Submit
-                          </button>
+                          <Divider />
+                          <br />
+                          <div align="right">
+                            <button className="btn btn-primary">Submit</button>
+                          </div>
                         </form>
                       </div>
                     </Fade>
                   </Modal>
+                  
+                  </ButtonGroup>
+                  &nbsp;
+                  <ButtonGroup
+                  variant="contained"
+                  color="primary"
+                  aria-label="contained primary button group"
+                >
+                  
+                  <div hidden={hiddenMenu3()}>
+                  <Button variant="outlined" href="/demo">Demo All</Button>
+                  </div>
                 </ButtonGroup>
               </Grid>
             </Grid>
@@ -742,6 +842,7 @@ const prev2 = () => {
                     <TableCell >CXO</TableCell>
                     <TableCell >Demo Status</TableCell>
                     <TableCell>Note</TableCell>
+                   
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -762,6 +863,8 @@ const prev2 = () => {
                       <TableCell >
                         {jadwaldemo.note}
                       </TableCell>
+                    
+             
                     </TableRow>
                   ))}
                 </TableBody>

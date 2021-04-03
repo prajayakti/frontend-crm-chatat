@@ -87,6 +87,13 @@ return changeTime
                   </td>
                   <td>{demo.demoresult.name}</td>
                   <td>
+                  <Link
+                      to={`/demo/${demo.merchant.id}/view`}
+                      className="btn btn-sm btn-outline-secondary"
+                    >
+                      View
+                    </Link>
+                    &nbsp;&nbsp;
                   <Link to={`/demo/${demo.id}/assign`} className="btn btn-sm btn-outline-secondary">Assign CXO</Link>
                   </td>
                 </tr>
