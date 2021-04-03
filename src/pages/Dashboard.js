@@ -235,7 +235,7 @@ const Dashboard = () => {
         <Divider/>
         <br/>
         <div hidden={hiddenMenu4()}>
-          <div className="d-flex justify-content-between">
+          <div className="container" align="center">
             <div>
         <img
           
@@ -244,7 +244,7 @@ const Dashboard = () => {
         />
         </div>
         <div className="mt-5">
-        <SubTitle>silahkan hubungi Ado atau Dimas untuk set up Job Function anda agar anda dapat membuka fitur sesuai job function anda </SubTitle>
+        <SubTitle>Silahkan hubungi Ado atau Dimas untuk mendapatkan izin akses fitur system ini, terimakasih </SubTitle>
         </div>
  
         </div>
